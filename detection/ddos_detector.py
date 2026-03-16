@@ -1,54 +1,39 @@
-from mitigation.firewall_blocker import block_ip
-from collections import Counter
 import time
-import os
+from collections import defaultdict
+from mitigation.firewall_blocker import block_ip
 
-# Log file location
-log_file = "logs/sample_log.log"
+# Nginx access log location
+LOG_FILE = "/var/log/nginx/access.log"
 
-# Attack detection threshold
-threshold = 5
+# Request threshold to detect attack
+THRESHOLD = 100
 
-# Keep track of blocked IPs
+# Store blocked IPs to avoid blocking multiple times
 blocked_ips = set()
 
-while True:
+def detect_ddos():
 
-    # Clear terminal screen
-    os.system("clear")
+    ip_count = defaultdict(int)
 
-    ips = []
+    with open(LOG_FILE, "r") as log:
 
-    # Read log file
-    with open(log_file, "r") as file:
-        for line in file:
+        for line in log:
             ip = line.split()[0]
-            ips.append(ip)
+            ip_count[ip] += 1
 
-    # Count requests from each IP
-    ip_counts = Counter(ips)
+    for ip, count in ip_count.items():
 
-    print("========== SECURITY MONITOR ==========")
+        if count > THRESHOLD and ip not in blocked_ips:
 
-    for ip, count in ip_counts.items():
-        print(f"{ip} -> {count} requests")
+            print(f"[ALERT] Suspicious IP detected: {ip} ({count} requests)")
 
-    print("======================================")
-
-    print("\nSuspicious IPs:")
-
-    # Detect attackers
-    for ip, count in ip_counts.items():
-
-        if count > threshold and ip not in blocked_ips:
-
-            print(f"Possible attacker detected: {ip}")
-
-            # Call mitigation module
             block_ip(ip)
 
             blocked_ips.add(ip)
 
-    print("\nNext scan in 10 seconds...")
 
-    time.sleep(10)
+if __name__ == "__main__":
+
+    while True:
+        detect_ddos()
+        time.sleep(10)
