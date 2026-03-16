@@ -25,3 +25,6 @@ This file records every request made to the web server.
 ## 5. Role in DDoS Protection System
 The Python detection script monitors the Nginx access logs.  
 If an IP generates too many requests in a short time, the system flags it as suspicious and blocks the IP using firewall rules.
+
+
+
