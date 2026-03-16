@@ -1,0 +1,27 @@
+# EC2 and Nginx Setup Documentation
+
+## 1. EC2 Instance Creation
+An AWS EC2 instance was created using Ubuntu as the operating system.  
+The instance was accessed using SSH for remote server management.
+
+## 2. Nginx Installation
+Nginx web server was installed using:
+
+sudo apt update
+sudo apt install nginx
+
+After installation, the server was started and verified by accessing the public IP.
+
+## 3. Web Server Verification
+The default Nginx webpage was opened in the browser using the EC2 public IP to confirm the server was running correctly.
+
+## 4. Log File Location
+Nginx stores request logs at:
+
+/var/log/nginx/access.log
+
+This file records every request made to the web server.
+
+## 5. Role in DDoS Protection System
+The Python detection script monitors the Nginx access logs.  
+If an IP generates too many requests in a short time, the system flags it as suspicious and blocks the IP using firewall rules.
