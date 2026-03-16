@@ -1,30 +1,33 @@
-# EC2 and Nginx Setup Documentation
+# Ubuntu Server Setup
 
-## 1. EC2 Instance Creation
-An AWS EC2 instance was created using Ubuntu as the operating system.  
-The instance was accessed using SSH for remote server management.
+## 1. AWS EC2 Instance Creation
+An AWS EC2 instance was created using Ubuntu 22.04.
 
-## 2. Nginx Installation
-Nginx web server was installed using:
+## 2. Security Group Configuration
+The following ports were opened:
+
+22 - SSH  
+80 - HTTP
+
+## 3. Install Nginx
 
 sudo apt update
 sudo apt install nginx
 
-After installation, the server was started and verified by accessing the public IP.
+## 4. Verify Nginx Installation
+Open the EC2 public IP in browser.
 
-## 3. Web Server Verification
-The default Nginx webpage was opened in the browser using the EC2 public IP to confirm the server was running correctly.
+Example:
+http://<EC2_PUBLIC_IP>
 
-## 4. Log File Location
-Nginx stores request logs at:
+## 5. Nginx Log File Location
 
 /var/log/nginx/access.log
 
-This file records every request made to the web server.
+## 6. Role in Project
 
-## 5. Role in DDoS Protection System
-The Python detection script monitors the Nginx access logs.  
-If an IP generates too many requests in a short time, the system flags it as suspicious and blocks the IP using firewall rules.
+The Python detection script monitors this log file.
+If an IP generates too many requests, it is blocked using firewall rules.
 
 
 
